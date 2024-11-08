@@ -1,12 +1,12 @@
-name: Sitemap Generation
+name: Generate Sitemap
 
 on:
   workflow_dispatch:
     inputs:
       url:
-        description: 'Website URL to generate sitemap for'
+        description: 'URL to generate sitemap for'
         required: true
-        default: 'https://example.com'
+        type: string
 
 jobs:
   generate_sitemap:
@@ -16,26 +16,18 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.9'  # Updated to Python 3.9 for the latest features
-
-    - name: Install dependencies
+    - name: Set up Git config
       run: |
-        pip install -r requirements.txt  # Use requirements.txt for dependencies
+        git config --global user.name 'jphabs'
+        git config --global user.email 'jpbermoy@gmail.com'
 
-    - name: Run sitemap script
-      env:
-        SOME_SECRET: ${{ secrets.GITHUB_TOKEN }}  # Your secret token for GitHub authentication
-        TARGET_URL: ${{ github.event.inputs.url }}  # Passing dynamic URL input
+    - name: Generate sitemap
       run: |
-        python main.py
+        echo "Generating sitemap for ${{ github.event.inputs.url }}"
+        # Example: If you have a Python script for sitemap generation
+        # python generate_sitemap.py "${{ github.event.inputs.url }}"
 
-    - name: Commit and push sitemap
+    - name: Commit and push sitemap if there are changes
       run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Actions"
-        git add sitemap.xml  # Assuming the script generates this file
-        git commit -m "Add generated sitemap"
-        git push
+        git add .
+        git diff --cached --exit-code || (git commit -m "Update sitemap for ${{ github.event.inputs.url }}" && git push)
