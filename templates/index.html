@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sitemap Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Sitemap Generator</h1>
+        <form id="sitemap-form">
+            <label for="url">Enter URL:</label>
+            <input type="url" id="url" name="url" placeholder="https://example.com" required>
+            <button type="submit">Generate Sitemap</button>
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

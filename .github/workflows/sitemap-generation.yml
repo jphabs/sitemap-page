@@ -1,0 +1,41 @@
+name: Sitemap Generation
+
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: 'Website URL to generate sitemap for'
+        required: true
+        default: 'https://example.com'
+
+jobs:
+  generate_sitemap:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'  # Updated to Python 3.9 for the latest features
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt  # Use requirements.txt for dependencies
+
+    - name: Run sitemap script
+      env:
+        SOME_SECRET: ${{ secrets.GITHUB_TOKEN }}  # Your secret token for GitHub authentication
+        TARGET_URL: ${{ github.event.inputs.url }}  # Passing dynamic URL input
+      run: |
+        python main.py
+
+    - name: Commit and push sitemap
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Actions"
+        git add sitemap.xml  # Assuming the script generates this file
+        git commit -m "Add generated sitemap"
+        git push
