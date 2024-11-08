@@ -24,8 +24,7 @@ jobs:
     - name: Generate sitemap
       run: |
         echo "Generating sitemap for ${{ github.event.inputs.url }}"
-        # Example: If you have a Python script for sitemap generation
-        # python generate_sitemap.py "${{ github.event.inputs.url }}"
+        python sitemap-generation.py "${{ github.event.inputs.url }}"
 
     - name: Commit and push sitemap if there are changes
       run: |
