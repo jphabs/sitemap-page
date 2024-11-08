@@ -23,10 +23,9 @@ jobs:
 
     - name: Generate sitemap
       run: |
-        # Add your sitemap generation command here
-        # Example command: python sitemap-generation.py ${{ github.event.inputs.url }}
-        echo "Generating sitemap for ${{ github.event.inputs.url }}"
-        # Ensure that the sitemap file is generated or updated
+        # Run your actual command to generate the sitemap
+        python sitemap-generation.py ${{ github.event.inputs.url }}
+        # Make sure sitemap file is updated or generated
         echo "<url><loc>${{ github.event.inputs.url }}</loc></url>" > sitemap.xml
 
     - name: Check if there are changes to commit
