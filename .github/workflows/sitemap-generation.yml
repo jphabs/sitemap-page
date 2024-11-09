@@ -16,6 +16,16 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
     - name: Set up Git config
       run: |
         git config --global user.name 'jphabs'
@@ -25,7 +35,7 @@ jobs:
       run: |
         # Run your actual command to generate the sitemap
         python sitemap-generation.py ${{ github.event.inputs.url }}
-        # Make sure sitemap file is updated or generated
+        # Ensure sitemap file is updated or generated
         echo "<url><loc>${{ github.event.inputs.url }}</loc></url>" > sitemap.xml
 
     - name: Check if there are changes to commit
