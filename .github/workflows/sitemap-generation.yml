@@ -16,33 +16,25 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.x'
-
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-
     - name: Set up Git config
       run: |
         git config --global user.name 'jphabs'
         git config --global user.email 'jpbermoy@gmail.com'
 
-    - name: Generate sitemap
+    - name: Install dependencies
       run: |
-        # Run your actual command to generate the sitemap
-        python sitemap-generation.py ${{ github.event.inputs.url }}
-        # Ensure sitemap file is updated or generated
-        echo "<url><loc>${{ github.event.inputs.url }}</loc></url>" > sitemap.xml
+        python -m pip install -r requirements.txt
 
-    - name: Check if there are changes to commit
+    - name: Generate sitemap
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Set the GitHub token in the environment
       run: |
-        git diff --exit-code || echo "Changes detected"
+        python sitemap-generation.py ${{ github.event.inputs.url }}
 
     - name: Commit and push sitemap
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Ensure the token is available for pushing changes
       run: |
         git add .
-        git diff --cached --quiet || (git commit -m "Update sitemap for ${{ github.event.inputs.url }}" && git push)
+        git commit -m "Update sitemap for ${{ github.event.inputs.url }}"
+        git push
